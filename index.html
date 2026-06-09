@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EMS허리마사지기 — 유통 채널별 판매 비중</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --sage-bg: #E8EDE9;
+    --card: #FFFFFF;
+    --deep-sage: #3E4D41;
+    --sage: #9BAA9E;
+    --charcoal: #505759;
+    --line: #E2E8E4;
+    --muted: #7C8A80;
+    --radius: 18px;
+    --shadow: 0 6px 24px rgba(62, 77, 65, 0.08), 0 1px 3px rgba(62, 77, 65, 0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
+                 "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--sage-bg);
+    color: var(--charcoal);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 20px 64px;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  /* Header */
+  header.page-head {
+    margin-bottom: 28px;
+    padding: 4px 4px 0;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--deep-sage);
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .meta-pill {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-weight: 600;
+    color: var(--deep-sage);
+  }
+
+  /* Section */
+  section.period {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 26px 28px 30px;
+    margin-bottom: 22px;
+  }
+  .sec-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px 16px;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-head h2 {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--deep-sage);
+  }
+  .sec-head .range {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .sec-head .totals {
+    margin-left: auto;
+    display: flex;
+    gap: 22px;
+    text-align: right;
+  }
+  .sec-head .totals .t-label {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .sec-head .totals .t-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--deep-sage);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .period-body {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    align-items: center;
+  }
+  .chart-box {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+  }
+  .chart-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    text-align: center;
+  }
+  .chart-center .cc-num {
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--deep-sage);
+    font-variant-numeric: tabular-nums;
+  }
+  .chart-center .cc-label {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  thead th {
+    text-align: right;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 0 0 11px;
+    border-bottom: 1.5px solid var(--line);
+  }
+  thead th:first-child { text-align: left; }
+  tbody td {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: var(--charcoal);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td.ch {
+    text-align: left;
+    font-weight: 600;
+    color: var(--deep-sage);
+  }
+  .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 9px;
+    vertical-align: middle;
+  }
+  td.rev { font-weight: 600; }
+  .share-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    justify-content: flex-end;
+  }
+  .share-bar {
+    width: 56px;
+    height: 6px;
+    border-radius: 4px;
+    background: var(--line);
+    overflow: hidden;
+    flex: none;
+  }
+  .share-bar > i {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+  }
+  .share-pct {
+    min-width: 48px;
+    text-align: right;
+    font-weight: 700;
+    color: var(--deep-sage);
+  }
+  tfoot td {
+    padding: 12px 0 0;
+    font-weight: 800;
+    color: var(--deep-sage);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    border-top: 1.5px solid var(--line);
+  }
+  tfoot td:first-child { text-align: left; }
+
+  /* Compare section */
+  .compare-body {
+    margin-top: 4px;
+  }
+  .compare-chart-box {
+    position: relative;
+    width: 100%;
+    height: 340px;
+  }
+  .compare-note {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+
+  /* Insight cards */
+  .insight-head {
+    margin: 34px 4px 16px;
+  }
+  .insight-head h2 {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--deep-sage);
+  }
+  .insights {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .insight {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 22px;
+    border-left: 4px solid var(--sage);
+  }
+  .insight .i-tag {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--sage);
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  .insight p {
+    font-size: 14px;
+    color: var(--charcoal);
+  }
+  .insight strong { color: var(--deep-sage); font-weight: 700; }
+
+  footer {
+    margin-top: 36px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    body { padding: 22px 14px 48px; }
+    h1 { font-size: 23px; }
+    section.period { padding: 20px 18px 24px; }
+    .sec-head .totals { margin-left: 0; width: 100%; justify-content: flex-start; gap: 26px; }
+    .period-body { grid-template-columns: 1fr; gap: 24px; }
+    .chart-box { max-width: 260px; }
+    .insights { grid-template-columns: 1fr; }
+    .share-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <span class="eyebrow">Barybody · Distribution Report</span>
+    <h1>EMS허리마사지기 — 유통 채널별 판매 비중</h1>
+    <div class="meta-row">
+      <span class="meta-pill">데이터 기준일 2026-06-08</span>
+      <span>BigQuery · dist_product_channel_summary</span>
+      <span>매출 비중 = 채널 매출 / 기간 총매출</span>
+    </div>
+  </header>
+
+  <!-- 섹션들이 여기에 렌더링됨 -->
+  <div id="sections"></div>
+
+  <!-- 기간 비교 -->
+  <section class="period" id="compare-section">
+    <div class="sec-head">
+      <h2>기간별 상위 채널 비중 변화</h2>
+      <span class="range">7일 · 15일 · 30일 매출 비중(%) 비교</span>
+    </div>
+    <div class="compare-body">
+      <div class="compare-chart-box">
+        <canvas id="compareChart"></canvas>
+      </div>
+      <p class="compare-note">상위 5개 채널의 기간별 매출 비중 추이. 기간이 짧을수록 스마트스토어 비중이 커지고 easypos(오프라인) 비중은 낮아집니다.</p>
+    </div>
+  </section>
+
+  <!-- 인사이트 -->
+  <div class="insight-head">
+    <h2>인사이트</h2>
+  </div>
+  <div class="insights">
+    <div class="insight">
+      <div class="i-tag">집중도</div>
+      <p>상위 3채널 <strong>easypos · 스마트스토어 · 자사몰(cafe24)</strong>이 전체 매출의 <strong>80~89%</strong>를 차지합니다. (30일 기준 <strong>84.7%</strong>)</p>
+    </div>
+    <div class="insight">
+      <div class="i-tag">기간별 쏠림</div>
+      <p>기간이 좁을수록 <strong>스마트스토어 쏠림</strong>이 심화됩니다. 7일 <strong>58.8%</strong>까지 상승하며, easypos는 15일 43%에서 7일 <strong>22.5%</strong>로 하락합니다.</p>
+    </div>
+    <div class="insight">
+      <div class="i-tag">오프라인 채널</div>
+      <p><strong>easypos(오프라인 POS)</strong>가 15일·30일 기준 최대 채널입니다. 오프라인 판매가 중장기 매출의 핵심 축입니다.</p>
+    </div>
+    <div class="insight">
+      <div class="i-tag">해석 주의</div>
+      <p>최근 7일은 표본이 <strong>10건</strong>에 불과해 단기 변동성이 큽니다. 단일 건의 영향이 비중을 크게 흔들 수 있어 해석에 주의가 필요합니다.</p>
+    </div>
+  </div>
+
+  <footer>
+    Barybody 유통 데이터 리포트 · 데이터 기준일 2026-06-08 · 출처 BigQuery dist_product_channel_summary
+  </footer>
+
+</div>
+
+<script>
+  // ── 세이지 그린 그라데이션 팔레트 (딥세이지 → 라이트) ──
+  const PALETTE = ["#3E4D41", "#5C7061", "#7C9182", "#9BAA9E", "#B7C4BB", "#D2DBD2"];
+
+  const won = (n) => n.toLocaleString("ko-KR");
+  const pct = (n) => n.toFixed(1) + "%";
+
+  // ── 데이터 ──
+  const PERIODS = [
+    {
+      id: "d7",
+      title: "최근 7일",
+      range: "2026-06-02 ~ 06-08",
+      total: 1326000,
+      qty: 10,
+      rows: [
+        { ch: "스마트스토어",      rev: 780000, share: 58.8, qty: 6 },
+        { ch: "easypos(오프라인)", rev: 298000, share: 22.5, qty: 2 },
+        { ch: "오늘의집",          rev: 139000, share: 10.5, qty: 1 },
+        { ch: "자사몰(cafe24)",    rev: 109000, share: 8.2,  qty: 1 },
+      ],
+    },
+    {
+      id: "d15",
+      title: "최근 15일",
+      range: "2026-05-25 ~ 06-08",
+      total: 4503700,
+      qty: 34,
+      rows: [
+        { ch: "easypos(오프라인)", rev: 1937000, share: 43.0, qty: 13 },
+        { ch: "스마트스토어",      rev: 1197700, share: 26.6, qty: 10 },
+        { ch: "자사몰(cafe24)",    rev: 694000,  share: 15.4, qty: 6 },
+        { ch: "jcohs",             rev: 278000,  share: 6.2,  qty: 2 },
+        { ch: "오늘의집",          rev: 248000,  share: 5.5,  qty: 2 },
+        { ch: "영풍문고",          rev: 149000,  share: 3.3,  qty: 1 },
+      ],
+    },
+    {
+      id: "d30",
+      title: "최근 30일",
+      range: "2026-05-10 ~ 06-08",
+      total: 6979400,
+      qty: 54,
+      rows: [
+        { ch: "easypos(오프라인)", rev: 2235000, share: 32.0, qty: 15 },
+        { ch: "스마트스토어",      rev: 2150900, share: 30.8, qty: 18 },
+        { ch: "자사몰(cafe24)",    rev: 1531500, share: 21.9, qty: 13 },
+        { ch: "jcohs",             rev: 556000,  share: 8.0,  qty: 4 },
+        { ch: "오늘의집",          rev: 357000,  share: 5.1,  qty: 3 },
+        { ch: "영풍문고",          rev: 149000,  share: 2.1,  qty: 1 },
+      ],
+    },
+  ];
+
+  // ── 섹션 렌더링 ──
+  const sectionsEl = document.getElementById("sections");
+
+  PERIODS.forEach((p) => {
+    const colorFor = (i) => PALETTE[i % PALETTE.length];
+
+    const rowsHtml = p.rows.map((r, i) => `
+      <tr>
+        <td class="ch"><span class="swatch" style="background:${colorFor(i)}"></span>${r.ch}</td>
+        <td class="rev">${won(r.rev)}</td>
+        <td>
+          <span class="share-cell">
+            <span class="share-bar"><i style="width:${r.share}%;background:${colorFor(i)}"></i></span>
+            <span class="share-pct">${pct(r.share)}</span>
+          </span>
+        </td>
+        <td>${won(r.qty)}</td>
+      </tr>`).join("");
+
+    const section = document.createElement("section");
+    section.className = "period";
+    section.innerHTML = `
+      <div class="sec-head">
+        <h2>${p.title}</h2>
+        <span class="range">${p.range}</span>
+        <div class="totals">
+          <div>
+            <div class="t-label">총매출</div>
+            <div class="t-val">${won(p.total)}원</div>
+          </div>
+          <div>
+            <div class="t-label">판매량</div>
+            <div class="t-val">${won(p.qty)}개</div>
+          </div>
+        </div>
+      </div>
+      <div class="period-body">
+        <div class="chart-box">
+          <canvas id="donut-${p.id}"></canvas>
+          <div class="chart-center">
+            <div class="cc-num">${won(p.total)}</div>
+            <div class="cc-label">총매출(원)</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>채널</th>
+              <th>매출(원)</th>
+              <th>매출비중</th>
+              <th>판매량</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+          <tfoot>
+            <tr>
+              <td>합계</td>
+              <td>${won(p.total)}</td>
+              <td>100.0%</td>
+              <td>${won(p.qty)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>`;
+    sectionsEl.appendChild(section);
+
+    // 도넛 차트
+    new Chart(document.getElementById(`donut-${p.id}`), {
+      type: "doughnut",
+      data: {
+        labels: p.rows.map((r) => r.ch),
+        datasets: [{
+          data: p.rows.map((r) => r.rev),
+          backgroundColor: p.rows.map((_, i) => colorFor(i)),
+          borderColor: "#FFFFFF",
+          borderWidth: 3,
+          hoverOffset: 6,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "66%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#3E4D41",
+            titleColor: "#fff",
+            bodyColor: "#E8EDE9",
+            padding: 11,
+            cornerRadius: 8,
+            displayColors: true,
+            callbacks: {
+              label: (ctx) => {
+                const row = p.rows[ctx.dataIndex];
+                return ` ${won(row.rev)}원 · ${pct(row.share)} · ${won(row.qty)}개`;
+              },
+            },
+          },
+        },
+      },
+    });
+  });
+
+  // ── 기간 비교 막대 차트 ──
+  const COMPARE_CHANNELS = ["스마트스토어", "easypos(오프라인)", "자사몰(cafe24)", "jcohs", "오늘의집"];
+  const shareOf = (period, ch) => {
+    const found = period.rows.find((r) => r.ch === ch);
+    return found ? found.share : 0;
+  };
+  const cmpColor = ["#5C7061", "#9BAA9E", "#C2CEC5"]; // 7 / 15 / 30일
+
+  new Chart(document.getElementById("compareChart"), {
+    type: "bar",
+    data: {
+      labels: COMPARE_CHANNELS,
+      datasets: [
+        { label: "7일",  data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[0], ch)), backgroundColor: cmpColor[0], borderRadius: 5, maxBarThickness: 34 },
+        { label: "15일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[1], ch)), backgroundColor: cmpColor[1], borderRadius: 5, maxBarThickness: 34 },
+        { label: "30일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[2], ch)), backgroundColor: cmpColor[2], borderRadius: 5, maxBarThickness: 34 },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "top",
+          align: "end",
+          labels: { color: "#505759", font: { weight: "600" }, usePointStyle: true, pointStyle: "rectRounded", padding: 16 },
+        },
+        tooltip: {
+          backgroundColor: "#3E4D41",
+          padding: 11,
+          cornerRadius: 8,
+          callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${pct(ctx.parsed.y)}` },
+        },
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: "#505759", font: { weight: "600" } } },
+        y: {
+          beginAtZero: true,
+          grid: { color: "#EEF2EF" },
+          ticks: { color: "#7C8A80", callback: (v) => v + "%" },
+          title: { display: true, text: "매출 비중(%)", color: "#7C8A80", font: { size: 11.5, weight: "600" } },
+        },
+      },
+    },
+  });
+</script>
+</body>
+</html>
