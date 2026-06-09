@@ -315,7 +315,7 @@
   <section class="period" id="compare-section">
     <div class="sec-head">
       <h2>기간별 상위 채널 비중 변화</h2>
-      <span class="range">7일 · 15일 · 30일 매출 비중(%) 비교</span>
+      <span class="range">6/1~8일 · 15일 · 30일 매출 비중(%) 비교</span>
     </div>
     <div class="compare-body">
       <div class="compare-chart-box">
@@ -332,11 +332,11 @@
   <div class="insights">
     <div class="insight">
       <div class="i-tag">집중도</div>
-      <p>상위 3채널 <strong>easypos · 스마트스토어 · 자사몰(cafe24)</strong>이 전체 매출의 <strong>80~89%</strong>를 차지합니다. (30일 기준 <strong>84.7%</strong>)</p>
+      <p>상위 3채널 <strong>easypos · 스마트스토어 · 자사몰(cafe24)</strong>이 전체 매출의 <strong>80~93%</strong>를 차지합니다. (30일 기준 <strong>84.7%</strong>)</p>
     </div>
     <div class="insight">
       <div class="i-tag">기간별 쏠림</div>
-      <p>기간이 좁을수록 <strong>스마트스토어 쏠림</strong>이 심화됩니다. 7일 <strong>58.8%</strong>까지 상승하며, easypos는 15일 43%에서 7일 <strong>22.5%</strong>로 하락합니다.</p>
+      <p>기간이 좁을수록 <strong>스마트스토어 쏠림</strong>이 심화됩니다. 6/1~8일 <strong>53.4%</strong>까지 상승하며, easypos는 15일 43%에서 6/1~8일 <strong>15.2%</strong>로 하락합니다.</p>
     </div>
     <div class="insight">
       <div class="i-tag">오프라인 채널</div>
@@ -344,7 +344,7 @@
     </div>
     <div class="insight">
       <div class="i-tag">해석 주의</div>
-      <p>최근 7일은 표본이 <strong>10건</strong>에 불과해 단기 변동성이 큽니다. 단일 건의 영향이 비중을 크게 흔들 수 있어 해석에 주의가 필요합니다.</p>
+      <p>6/1~8일은 표본이 <strong>16건</strong>에 불과해 단기 변동성이 큽니다. 단일 건의 영향이 비중을 크게 흔들 수 있어 해석에 주의가 필요합니다.</p>
     </div>
   </div>
 
@@ -365,15 +365,15 @@
   const PERIODS = [
     {
       id: "d7",
-      title: "최근 7일",
-      range: "2026-06-02 ~ 06-08",
-      total: 1326000,
-      qty: 10,
+      title: "6/1~6/8",
+      range: "2026-06-01 ~ 06-08",
+      total: 1957600,
+      qty: 16,
       rows: [
-        { ch: "스마트스토어",      rev: 780000, share: 58.8, qty: 6 },
-        { ch: "easypos(오프라인)", rev: 298000, share: 22.5, qty: 2 },
-        { ch: "오늘의집",          rev: 139000, share: 10.5, qty: 1 },
-        { ch: "자사몰(cafe24)",    rev: 109000, share: 8.2,  qty: 1 },
+        { ch: "스마트스토어",      rev: 1044600, share: 53.4, qty: 9 },
+        { ch: "자사몰(cafe24)",    rev: 476000,  share: 24.3, qty: 4 },
+        { ch: "easypos(오프라인)", rev: 298000,  share: 15.2, qty: 2 },
+        { ch: "오늘의집",          rev: 139000,  share: 7.1,  qty: 1 },
       ],
     },
     {
@@ -525,7 +525,7 @@
     data: {
       labels: COMPARE_CHANNELS,
       datasets: [
-        { label: "7일",  data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[0], ch)), backgroundColor: cmpColor[0], borderRadius: 5, maxBarThickness: 34 },
+        { label: "6/1~8일",  data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[0], ch)), backgroundColor: cmpColor[0], borderRadius: 5, maxBarThickness: 34 },
         { label: "15일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[1], ch)), backgroundColor: cmpColor[1], borderRadius: 5, maxBarThickness: 34 },
         { label: "30일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[2], ch)), backgroundColor: cmpColor[2], borderRadius: 5, maxBarThickness: 34 },
       ],
