@@ -100,8 +100,10 @@
   .sec-head .totals {
     margin-left: auto;
     display: flex;
-    gap: 22px;
+    flex-wrap: wrap;
+    gap: 8px 20px;
     text-align: right;
+    justify-content: flex-end;
   }
   .sec-head .totals .t-label {
     font-size: 11.5px;
@@ -110,25 +112,27 @@
     letter-spacing: 0.02em;
   }
   .sec-head .totals .t-val {
-    font-size: 18px;
+    font-size: 16.5px;
     font-weight: 800;
     color: var(--deep-sage);
     font-variant-numeric: tabular-nums;
   }
+  .sec-head .totals .t-val.neg { color: #B4524A; }
 
   .period-body {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 280px 1fr;
     gap: 30px;
     align-items: center;
   }
   .chart-box {
     position: relative;
     width: 100%;
-    max-width: 320px;
+    max-width: 280px;
     margin: 0 auto;
     aspect-ratio: 1 / 1;
   }
+  .table-wrap { overflow-x: auto; }
   .chart-center {
     position: absolute;
     inset: 0;
@@ -225,6 +229,12 @@
     border-top: 1.5px solid var(--line);
   }
   tfoot td:first-child { text-align: left; }
+  td.neg, tfoot td.neg { color: #B4524A; }
+  td.pos { color: var(--deep-sage); }
+  td.dash { color: #B7C4BB; }
+  td.mtr { white-space: nowrap; }
+  thead th.sep { border-left: 1px solid var(--line); padding-left: 14px; }
+  tbody td.sep, tfoot td.sep { border-left: 1px solid var(--line); padding-left: 14px; }
 
   /* Compare section */
   .compare-body {
@@ -286,12 +296,14 @@
   @media (max-width: 760px) {
     body { padding: 22px 14px 48px; }
     h1 { font-size: 23px; }
-    section.period { padding: 20px 18px 24px; }
-    .sec-head .totals { margin-left: 0; width: 100%; justify-content: flex-start; gap: 26px; }
+    section.period { padding: 20px 16px 24px; }
+    .sec-head .totals { margin-left: 0; width: 100%; justify-content: flex-start; gap: 8px 20px; }
     .period-body { grid-template-columns: 1fr; gap: 24px; }
-    .chart-box { max-width: 260px; }
+    .chart-box { max-width: 240px; }
     .insights { grid-template-columns: 1fr; }
     .share-bar { display: none; }
+    .table-wrap { margin: 0 -16px; padding: 0 16px; }
+    table { min-width: 620px; }
   }
 </style>
 </head>
@@ -303,8 +315,8 @@
     <h1>EMS허리마사지기 — 유통 채널별 판매 비중</h1>
     <div class="meta-row">
       <span class="meta-pill">데이터 기준일 2026-06-08</span>
-      <span>BigQuery · dist_product_channel_summary</span>
-      <span>매출 비중 = 채널 매출 / 기간 총매출</span>
+      <span>BigQuery · dist_product_channel_summary · mkt_marketing_daily</span>
+      <span>순마진 = 채널마진 − 마케팅비(스마트스토어←gfa/advoost/searchad, 자사몰←meta)</span>
     </div>
   </header>
 
@@ -315,7 +327,7 @@
   <section class="period" id="compare-section">
     <div class="sec-head">
       <h2>기간별 상위 채널 비중 변화</h2>
-      <span class="range">6/1~8일 · 15일 · 30일 매출 비중(%) 비교</span>
+      <span class="range">6월 · 최근 7·15·30일 매출 비중(%) 비교</span>
     </div>
     <div class="compare-body">
       <div class="compare-chart-box">
@@ -330,21 +342,29 @@
     <h2>인사이트</h2>
   </div>
   <div class="insights">
+    <div class="insight" style="border-left-color:#B4524A;">
+      <div class="i-tag" style="color:#B4524A;">순마진 경고</div>
+      <p><strong>자사몰(cafe24)은 매출 대비 meta 광고비가 과도</strong>해 모든 기간 순마진 적자입니다. 30일 채널마진 84만원에 meta 광고비 <strong>333만원</strong>이 투입돼 순마진 <strong style="color:#B4524A;">−249만원(−162.5%)</strong>. 자사몰 적자가 30일 전체 순마진을 <strong style="color:#B4524A;">−77만원(−11.0%)</strong>으로 끌어내립니다.</p>
+    </div>
+    <div class="insight">
+      <div class="i-tag">스마트스토어 수익성</div>
+      <p>스마트스토어는 <strong>매출 1위(6월 53.4%)</strong>이면서 gfa 광고비 차감 후에도 흑자입니다. 순마진율 6월 <strong>48.9%</strong>, 30일 <strong>22.2%</strong>로 EMS허리마사지기 수익의 핵심 채널입니다.</p>
+    </div>
+    <div class="insight">
+      <div class="i-tag">오프라인·무광고 채널</div>
+      <p>광고비가 들지 않는 <strong>easypos(오프라인)·오늘의집·jcohs·영풍문고</strong>는 채널마진이 곧 순마진입니다. easypos는 15·30일 최대 채널이며 순마진율 <strong>42.5%</strong>로 안정적입니다.</p>
+    </div>
+    <div class="insight">
+      <div class="i-tag">기간별 쏠림</div>
+      <p>기간이 좁을수록 <strong>스마트스토어 쏠림</strong>이 심화됩니다. 최근 7일 <strong>58.8%</strong>까지 상승하며, easypos는 15일 43%에서 최근 7일 <strong>22.5%</strong>로 하락합니다.</p>
+    </div>
     <div class="insight">
       <div class="i-tag">집중도</div>
       <p>상위 3채널 <strong>easypos · 스마트스토어 · 자사몰(cafe24)</strong>이 전체 매출의 <strong>80~93%</strong>를 차지합니다. (30일 기준 <strong>84.7%</strong>)</p>
     </div>
     <div class="insight">
-      <div class="i-tag">기간별 쏠림</div>
-      <p>기간이 좁을수록 <strong>스마트스토어 쏠림</strong>이 심화됩니다. 6/1~8일 <strong>53.4%</strong>까지 상승하며, easypos는 15일 43%에서 6/1~8일 <strong>15.2%</strong>로 하락합니다.</p>
-    </div>
-    <div class="insight">
-      <div class="i-tag">오프라인 채널</div>
-      <p><strong>easypos(오프라인 POS)</strong>가 15일·30일 기준 최대 채널입니다. 오프라인 판매가 중장기 매출의 핵심 축입니다.</p>
-    </div>
-    <div class="insight">
       <div class="i-tag">해석 주의</div>
-      <p>6/1~8일은 표본이 <strong>16건</strong>에 불과해 단기 변동성이 큽니다. 단일 건의 영향이 비중을 크게 흔들 수 있어 해석에 주의가 필요합니다.</p>
+      <p>최근 7일은 표본이 <strong>10건</strong>(6월 16건)에 불과해 단기 변동성이 큽니다. 단일 건이 비중·순마진을 크게 흔들 수 있어(자사몰 7일 마진율 −524%) 해석에 주의가 필요합니다.</p>
     </div>
   </div>
 
@@ -361,49 +381,61 @@
   const won = (n) => n.toLocaleString("ko-KR");
   const pct = (n) => n.toFixed(1) + "%";
 
-  // ── 데이터 ──
+  // ── 데이터 (BigQuery 재쿼리, 기준일 2026-06-08) ──
+  // 채널마진 = dist_product_channel_summary.margin SUM
+  // 마케팅비 = mkt_marketing_daily.expense (스마트스토어←gfa/advoost/searchad, 자사몰←meta, 그 외 0)
+  // 순마진 = 채널마진 − 마케팅비, 마진율 = 순마진/매출×100
   const PERIODS = [
     {
-      id: "d7",
-      title: "6/1~6/8",
+      id: "m6",
+      title: "6월",
       range: "2026-06-01 ~ 06-08",
-      total: 1957600,
-      qty: 16,
+      total: 1957600, qty: 16, totMargin: 1027054, totMkt: 740952, totNet: 286102, totRate: 14.6,
       rows: [
-        { ch: "스마트스토어",      rev: 1044600, share: 53.4, qty: 9 },
-        { ch: "자사몰(cafe24)",    rev: 476000,  share: 24.3, qty: 4 },
-        { ch: "easypos(오프라인)", rev: 298000,  share: 15.2, qty: 2 },
-        { ch: "오늘의집",          rev: 139000,  share: 7.1,  qty: 1 },
+        { ch: "스마트스토어",      rev: 1044600, share: 53.4, qty: 9, margin: 564021, mkt: 52844,  net: 511177,  rate: 48.9 },
+        { ch: "자사몰(cafe24)",    rev: 476000,  share: 24.3, qty: 4, margin: 262947, mkt: 688108, net: -425161, rate: -89.3 },
+        { ch: "easypos(오프라인)", rev: 298000,  share: 15.2, qty: 2, margin: 126658, mkt: 0,      net: 126658,  rate: 42.5 },
+        { ch: "오늘의집",          rev: 139000,  share: 7.1,  qty: 1, margin: 73428,  mkt: 0,      net: 73428,   rate: 52.8 },
+      ],
+    },
+    {
+      id: "d7",
+      title: "최근 7일",
+      range: "2026-06-02 ~ 06-08",
+      total: 1326000, qty: 10, totMargin: 711115, totMkt: 673512, totNet: 37603, totRate: 2.8,
+      rows: [
+        { ch: "스마트스토어",      rev: 780000, share: 58.8, qty: 6, margin: 454907, mkt: 45915,  net: 408992,  rate: 52.4 },
+        { ch: "easypos(오프라인)", rev: 298000, share: 22.5, qty: 2, margin: 126658, mkt: 0,      net: 126658,  rate: 42.5 },
+        { ch: "오늘의집",          rev: 139000, share: 10.5, qty: 1, margin: 73428,  mkt: 0,      net: 73428,   rate: 52.8 },
+        { ch: "자사몰(cafe24)",    rev: 109000, share: 8.2,  qty: 1, margin: 56122,  mkt: 627597, net: -571475, rate: -524.3 },
       ],
     },
     {
       id: "d15",
       title: "최근 15일",
       range: "2026-05-25 ~ 06-08",
-      total: 4503700,
-      qty: 34,
+      total: 4503700, qty: 34, totMargin: 2051858, totMkt: 1385004, totNet: 666854, totRate: 14.8,
       rows: [
-        { ch: "easypos(오프라인)", rev: 1937000, share: 43.0, qty: 13 },
-        { ch: "스마트스토어",      rev: 1197700, share: 26.6, qty: 10 },
-        { ch: "자사몰(cafe24)",    rev: 694000,  share: 15.4, qty: 6 },
-        { ch: "jcohs",             rev: 278000,  share: 6.2,  qty: 2 },
-        { ch: "오늘의집",          rev: 248000,  share: 5.5,  qty: 2 },
-        { ch: "영풍문고",          rev: 149000,  share: 3.3,  qty: 1 },
+        { ch: "easypos(오프라인)", rev: 1937000, share: 43.0, qty: 13, margin: 823280, mkt: 0,       net: 823280,  rate: 42.5 },
+        { ch: "스마트스토어",      rev: 1197700, share: 26.6, qty: 10, margin: 661637, mkt: 226144,  net: 435493,  rate: 36.4 },
+        { ch: "자사몰(cafe24)",    rev: 694000,  share: 15.4, qty: 6,  margin: 375191, mkt: 1158860, net: -783669, rate: -112.9 },
+        { ch: "jcohs",             rev: 278000,  share: 6.2,  qty: 2,  margin: 50996,  mkt: 0,       net: 50996,   rate: 18.3 },
+        { ch: "오늘의집",          rev: 248000,  share: 5.5,  qty: 2,  margin: 120756, mkt: 0,       net: 120756,  rate: 48.7 },
+        { ch: "영풍문고",          rev: 149000,  share: 3.3,  qty: 1,  margin: 19998,  mkt: 0,       net: 19998,   rate: 13.4 },
       ],
     },
     {
       id: "d30",
       title: "최근 30일",
       range: "2026-05-10 ~ 06-08",
-      total: 6979400,
-      qty: 54,
+      total: 6979400, qty: 54, totMargin: 3265956, totMkt: 4036516, totNet: -770560, totRate: -11.0,
       rows: [
-        { ch: "easypos(오프라인)", rev: 2235000, share: 32.0, qty: 15 },
-        { ch: "스마트스토어",      rev: 2150900, share: 30.8, qty: 18 },
-        { ch: "자사몰(cafe24)",    rev: 1531500, share: 21.9, qty: 13 },
-        { ch: "jcohs",             rev: 556000,  share: 8.0,  qty: 4 },
-        { ch: "오늘의집",          rev: 357000,  share: 5.1,  qty: 3 },
-        { ch: "영풍문고",          rev: 149000,  share: 2.1,  qty: 1 },
+        { ch: "easypos(오프라인)", rev: 2235000, share: 32.0, qty: 15, margin: 949938,  mkt: 0,       net: 949938,   rate: 42.5 },
+        { ch: "스마트스토어",      rev: 2150900, share: 30.8, qty: 18, margin: 1186270, mkt: 707704,  net: 478566,   rate: 22.2 },
+        { ch: "자사몰(cafe24)",    rev: 1531500, share: 21.9, qty: 13, margin: 839674,  mkt: 3328812, net: -2489138, rate: -162.5 },
+        { ch: "jcohs",             rev: 556000,  share: 8.0,  qty: 4,  margin: 101992,  mkt: 0,       net: 101992,   rate: 18.3 },
+        { ch: "오늘의집",          rev: 357000,  share: 5.1,  qty: 3,  margin: 168084,  mkt: 0,       net: 168084,   rate: 47.1 },
+        { ch: "영풍문고",          rev: 149000,  share: 2.1,  qty: 1,  margin: 19998,   mkt: 0,       net: 19998,    rate: 13.4 },
       ],
     },
   ];
@@ -413,6 +445,12 @@
 
   PERIODS.forEach((p) => {
     const colorFor = (i) => PALETTE[i % PALETTE.length];
+
+    // 마케팅비 셀: 0이면 dash, 아니면 값
+    const mktCell = (v) => v > 0
+      ? `<td class="mtr sep">${won(v)}</td>`
+      : `<td class="dash sep">—</td>`;
+    const netCls = (v) => v < 0 ? "neg" : "pos";
 
     const rowsHtml = p.rows.map((r, i) => `
       <tr>
@@ -425,6 +463,10 @@
           </span>
         </td>
         <td>${won(r.qty)}</td>
+        <td class="sep">${won(r.margin)}</td>
+        ${mktCell(r.mkt)}
+        <td class="${netCls(r.net)}">${won(r.net)}</td>
+        <td class="${netCls(r.net)}">${pct(r.rate)}</td>
       </tr>`).join("");
 
     const section = document.createElement("section");
@@ -439,8 +481,16 @@
             <div class="t-val">${won(p.total)}원</div>
           </div>
           <div>
-            <div class="t-label">판매량</div>
-            <div class="t-val">${won(p.qty)}개</div>
+            <div class="t-label">마케팅비</div>
+            <div class="t-val">${won(p.totMkt)}원</div>
+          </div>
+          <div>
+            <div class="t-label">순마진</div>
+            <div class="t-val ${netCls(p.totNet)}">${won(p.totNet)}원</div>
+          </div>
+          <div>
+            <div class="t-label">마진율</div>
+            <div class="t-val ${netCls(p.totNet)}">${pct(p.totRate)}</div>
           </div>
         </div>
       </div>
@@ -452,6 +502,7 @@
             <div class="cc-label">총매출(원)</div>
           </div>
         </div>
+        <div class="table-wrap">
         <table>
           <thead>
             <tr>
@@ -459,6 +510,10 @@
               <th>매출(원)</th>
               <th>매출비중</th>
               <th>판매량</th>
+              <th class="sep">채널마진</th>
+              <th class="sep">마케팅비</th>
+              <th>순마진</th>
+              <th>마진율</th>
             </tr>
           </thead>
           <tbody>${rowsHtml}</tbody>
@@ -468,9 +523,14 @@
               <td>${won(p.total)}</td>
               <td>100.0%</td>
               <td>${won(p.qty)}</td>
+              <td class="sep">${won(p.totMargin)}</td>
+              <td class="sep">${won(p.totMkt)}</td>
+              <td class="${netCls(p.totNet)}">${won(p.totNet)}</td>
+              <td class="${netCls(p.totNet)}">${pct(p.totRate)}</td>
             </tr>
           </tfoot>
         </table>
+        </div>
       </div>`;
     sectionsEl.appendChild(section);
 
@@ -518,16 +578,17 @@
     const found = period.rows.find((r) => r.ch === ch);
     return found ? found.share : 0;
   };
-  const cmpColor = ["#5C7061", "#9BAA9E", "#C2CEC5"]; // 7 / 15 / 30일
+  const cmpColor = ["#3E4D41", "#5C7061", "#9BAA9E", "#C2CEC5"]; // 6월 / 7일 / 15일 / 30일
 
   new Chart(document.getElementById("compareChart"), {
     type: "bar",
     data: {
       labels: COMPARE_CHANNELS,
       datasets: [
-        { label: "6/1~8일",  data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[0], ch)), backgroundColor: cmpColor[0], borderRadius: 5, maxBarThickness: 34 },
-        { label: "15일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[1], ch)), backgroundColor: cmpColor[1], borderRadius: 5, maxBarThickness: 34 },
-        { label: "30일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[2], ch)), backgroundColor: cmpColor[2], borderRadius: 5, maxBarThickness: 34 },
+        { label: "6월",  data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[0], ch)), backgroundColor: cmpColor[0], borderRadius: 5, maxBarThickness: 28 },
+        { label: "최근 7일",  data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[1], ch)), backgroundColor: cmpColor[1], borderRadius: 5, maxBarThickness: 28 },
+        { label: "최근 15일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[2], ch)), backgroundColor: cmpColor[2], borderRadius: 5, maxBarThickness: 28 },
+        { label: "최근 30일", data: COMPARE_CHANNELS.map((ch) => shareOf(PERIODS[3], ch)), backgroundColor: cmpColor[3], borderRadius: 5, maxBarThickness: 28 },
       ],
     },
     options: {
